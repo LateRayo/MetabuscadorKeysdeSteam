@@ -1,0 +1,6 @@
+__pycache__/
+*.pyc
+build/
+dist/
+tiendas/__pycache__/
+main.spec
