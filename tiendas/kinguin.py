@@ -24,12 +24,12 @@ def obtener_llave_fresca():
         # igual que lo haría Google Chrome versión 120 (impersonate="chrome120").
         # Esto engaña al firewall de Cloudflare para que no nos tire Error 403.
         r = requests.get(url, headers=headers, impersonate="chrome120", timeout=15)
-        html = r.text
+        html = r.text # obtengo la respuesta de la request
         
         # LA LUPA MEJORADA (Regex): 
         # Le pedimos a Python que busque en TODO el código de la página web cualquier 
         # palabra extrañamente larga (de 100 caracteres o más) que solo tenga letras, números y el signo "=".
-        # Esto se debe a que las llaves en formato Base64 se ven exactamente así.
+        # Esto se debe a que las llaves en formato Base64(un cifrado sencillo) se ven exactamente así.
         candidatos = re.findall(r'[A-Za-z0-9=]{100,}', html)
         
         # Revisamos cada texto largo que encontró para ver cuál es la llave real
