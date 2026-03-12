@@ -1,4 +1,5 @@
 import cloudscraper
+from tiendas.tipo import inferir_tipo
 
 def buscar(juego):
     url = "https://search.gamivo.com/_search/"
@@ -53,12 +54,15 @@ def buscar(juego):
 
         link = f"https://www.gamivo.com/product/{slug}"
 
+        tipo = inferir_tipo(titulo, extra_texts=[slug])
+
         resultados.append({
             "tienda": "Gamivo",
             "titulo": titulo,
             "precio": float(precio),
             "moneda": "EUR",
-            "link": link
+            "link": link,
+            "tipo": tipo
         })
 
     return resultados

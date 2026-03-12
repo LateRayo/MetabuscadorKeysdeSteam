@@ -1,4 +1,5 @@
 import requests # Importamos la librería requests.
+from tiendas.tipo import inferir_tipo
 # Esta librería permite hacer peticiones HTTP desde Python
 
 def buscar(juego):
@@ -114,6 +115,8 @@ def buscar(juego):
         link = f"https://www.eneba.com/es/{slug}"  #Construimos el link completo usando f-string.
         # Es la forma moderna de insertar variables en strings.
 
+        tipo = inferir_tipo(titulo, extra_texts=[slug])
+
         resultados.append({
         # Guardamos el resultado en la lista.
         # Usamos un diccionario para representar un resultado.
@@ -121,7 +124,8 @@ def buscar(juego):
             "titulo": titulo,
             "precio": precio,
             "moneda": moneda,
-            "link": link
+            "link": link,
+            "tipo": tipo
         })
 
     return resultados

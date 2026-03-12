@@ -1,4 +1,5 @@
 import requests
+from tiendas.tipo import inferir_tipo
 
 def buscar(juego):
     # La URL exacta de la API que descubriste
@@ -46,14 +47,17 @@ def buscar(juego):
                 continue
             
             # Armamos el link completo
-            link_final = f"https://www.cdkeyoffer.com/{item.get('detail_url')}"
+            detail_url = item.get("detail_url")
+            link_final = f"https://www.cdkeyoffer.com/{detail_url}"
+            tipo = inferir_tipo(titulo, extra_texts=[detail_url])
 
             resultados.append({
                 "tienda": "CDKeyOffer",
                 "titulo": titulo,
                 "precio": precio,
                 "moneda": moneda,
-                "link": link_final
+                "link": link_final,
+                "tipo": tipo
             })
 
     return resultados

@@ -2,6 +2,7 @@ import base64          # Se usa para traducir texto cifrado en formato Base64 a 
 import re              # "Regular Expressions" (Expresiones Regulares). Permite buscar patrones de texto complejos.
 import urllib.parse    # Se usa para convertir caracteres normales a formato seguro para URLs (ej: un espacio se vuelve "%20").
 from curl_cffi import requests #Eengaña a los servidores simulando ser un navegador web real.
+from tiendas.tipo import inferir_tipo
 
 # =====================================================================
 # FUNCIÓN 1: EL ROBO DE LA LLAVE (Bypassing)
@@ -145,12 +146,15 @@ def buscar(juego):
         link = f"https://www.kinguin.net/category/{external_id}/{url_key}"
 
         # Guardamos el resultado en el formato estandarizado que espera nuestro main.py
+        tipo = inferir_tipo(titulo, extra_texts=[url_key])
+
         resultados.append({
             "tienda": "Kinguin",
             "titulo": titulo,
             "precio": float(precio),
             "moneda": "EUR", 
-            "link": link
+            "link": link,
+            "tipo": tipo
         })
 
     return resultados # Devolvemos la lista final lista para unirse a las demás tiendas

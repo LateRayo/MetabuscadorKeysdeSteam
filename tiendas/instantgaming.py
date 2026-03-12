@@ -1,4 +1,5 @@
 import requests
+from tiendas.tipo import inferir_tipo
 
 def buscar(juego):
     url = "https://qknhp8tc3y-dsn.algolia.net/1/indexes/produits_es_spotlighted_desc/query"
@@ -47,13 +48,15 @@ def buscar(juego):
             continue
 
         link = f"https://www.instant-gaming.com/es/{prod_id}-{seo_name}/"
+        tipo = inferir_tipo(titulo, extra_texts=[seo_name])
 
         resultados.append({
             "tienda": "Instant Gaming",
             "titulo": titulo,
             "precio": precio,
             "moneda": "EUR",
-            "link": link
+            "link": link,
+            "tipo": tipo
         })
 
     return resultados
