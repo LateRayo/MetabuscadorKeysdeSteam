@@ -88,11 +88,11 @@ def main():
     # -------------------------------
 
     # Dibujamos la tabla
-    table = Table(title="🏆 Mejores Ofertas Encontradas", show_header=True, header_style="bold magenta")
+    table = Table(title="🏆 Mejores Ofertas Encontradas", show_header=True, header_style="bold magenta", expand=True)
     table.add_column("Tienda", style="dim", width=15)
     table.add_column("Precio", justify="right", style="green", width=12)
     table.add_column("Juego", style="cyan")
-    table.add_column("Link de Compra", style="blue")
+    table.add_column("Link de Compra", style="blue", overflow="fold", no_wrap=False)
 
     for r in resultados:
         precio_formateado = f"{r['precio']:.2f} {r['moneda']}"
