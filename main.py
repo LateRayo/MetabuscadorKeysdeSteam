@@ -1,6 +1,8 @@
 import argparse
 from rich.console import Console
 from rich.table import Table
+from rich.text import Text
+from rich.style import Style
 
 # Tus tiendas
 from tiendas import eneba, cdkeyoffer, fanatical, gamivo, humblebundle, instantgaming, greenmangaming, kinguin
@@ -88,7 +90,13 @@ def main():
     # -------------------------------
 
     # Dibujamos la tabla
-    table = Table(title="🏆 Mejores Ofertas Encontradas", show_header=True, header_style="bold magenta", expand=True)
+    table = Table(
+        title="🏆 Mejores Ofertas Encontradas",
+        show_header=True,
+        header_style="bold magenta",
+        expand=True,
+        show_lines=True,
+    )
     table.add_column("Tienda", style="dim", width=15)
     table.add_column("Precio", justify="right", style="green", width=12)
     table.add_column("Juego", style="cyan")
@@ -96,11 +104,13 @@ def main():
 
     for r in resultados:
         precio_formateado = f"{r['precio']:.2f} {r['moneda']}"
+        link = r["link"]
+        link_text = Text(link, style=Style(link=link, color="blue", ))
         table.add_row(
             r['tienda'],
             precio_formateado,
             r['titulo'],
-            r['link']
+            link_text
         )
 
     console.print(table)
