@@ -1,4 +1,5 @@
 import requests
+from tiendas.tipo import inferir_tipo
 
 def buscar(juego):
     # La URL base de la API de Algolia para esta tienda
@@ -49,12 +50,15 @@ def buscar(juego):
         # Usamos /game/ de forma genérica porque suele redirigir bien
         link = f"https://www.fanatical.com/es/game/{slug}"
 
+        tipo = inferir_tipo(titulo, extra_texts=[slug])
+
         resultados.append({
             "tienda": "Fanatical",
             "titulo": titulo,
             "precio": precio,
             "moneda": moneda,
-            "link": link
+            "link": link,
+            "tipo": tipo
         })
 
     return resultados

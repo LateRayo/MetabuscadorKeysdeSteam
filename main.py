@@ -5,11 +5,25 @@ from rich.table import Table
 # Tus tiendas
 from tiendas import eneba, cdkeyoffer, fanatical, gamivo, humblebundle, instantgaming, greenmangaming, kinguin
 
+
+class BadParamParser(argparse.ArgumentParser):
+    def error(self, message):
+        console = Console()
+        usage = self.format_usage().strip()
+        console.print("[bold red]Bad params[/bold red] — revisa la sintaxis y vuelve a intentar.\n")
+        console.print(f"[bold]Uso:[/bold] {usage}\n")
+        console.print("[bold]Ejemplos:[/bold]")
+        console.print('  • python main.py "elden ring" --type all')
+        console.print('  • python main.py "elden ring" -m 5 -e xbox ps5')
+        console.print('  • python main.py "elden ring" --type account\n')
+        console.print("[bold]Opciones:[/bold] -m/--max, -e/--exclude, -t/--type\n")
+        raise SystemExit(2)
+
 def main():
     console = Console()
 
     # --- CONFIGURACIÓN DE ARGPARSE ---
-    parser = argparse.ArgumentParser(description="Metabuscador de ofertas de videojuegos en múltiples tiendas.")
+    parser = BadParamParser(description="Metabuscador de ofertas de videojuegos en múltiples tiendas.")
     
     # Argumento principal: El nombre del juego (puede tener varias palabras)
     parser.add_argument("juego", nargs="+", help="El nombre del juego que querés buscar (ej: elden ring)")
@@ -19,6 +33,14 @@ def main():
 
     # nargs="+" permite pasarle varias palabras separadas por espacio
     parser.add_argument("-e", "--exclude", nargs="+", default=[], help="Palabras a excluir de los resultados (ej: xbox ps5 account)")
+
+    # Filtro por tipo de producto
+    parser.add_argument(
+        "-t", "--type",
+        choices=["all", "account", "game-key"],
+        default="all",
+        help="Filtrar por tipo: all, account, game-key"
+    )
     
     # Leemos los comandos que ingresó el usuario
     args = parser.parse_args()
@@ -27,6 +49,7 @@ def main():
     juego = " ".join(args.juego)
     max_resultados = args.max
     palabras_excluidas = [p.lower() for p in args.exclude]
+    tipo_filtro = args.type
     # ---------------------------------
 
     console.print(f"\n[bold cyan]🔍 Buscando los mejores precios para:[/bold cyan] [bold white]'{juego}'[/bold white]...\n")
@@ -74,6 +97,9 @@ def main():
                 
         resultados = resultados_limpios
 
+    if tipo_filtro != "all":
+        resultados = [r for r in resultados if r.get("tipo", "game-key") == tipo_filtro]
+
     if not resultados:
         console.print("[bold yellow]No se encontraron resultados que coincidan con tu búsqueda.[/bold yellow]\n")
         return
@@ -90,6 +116,7 @@ def main():
     # Dibujamos la tabla
     table = Table(title="🏆 Mejores Ofertas Encontradas", show_header=True, header_style="bold magenta")
     table.add_column("Tienda", style="dim", width=15)
+    table.add_column("Tipo", style="yellow", width=10)
     table.add_column("Precio", justify="right", style="green", width=12)
     table.add_column("Juego", style="cyan")
     table.add_column("Link de Compra", style="blue")
@@ -98,6 +125,7 @@ def main():
         precio_formateado = f"{r['precio']:.2f} {r['moneda']}"
         table.add_row(
             r['tienda'],
+            r.get("tipo", "game-key"),
             precio_formateado,
             r['titulo'],
             r['link']

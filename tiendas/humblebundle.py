@@ -1,5 +1,6 @@
 import urllib.parse
 from curl_cffi import requests
+from tiendas.tipo import inferir_tipo
 
 def buscar(juego):
     url = "https://www.humblebundle.com/store/api/search"
@@ -50,12 +51,15 @@ def buscar(juego):
 
         link = f"https://www.humblebundle.com/store/{slug}"
 
+        tipo = inferir_tipo(titulo, extra_texts=[slug])
+
         resultados.append({
             "tienda": "Humble Bundle",
             "titulo": titulo,
             "precio": float(precio),
             "moneda": moneda,
-            "link": link
+            "link": link,
+            "tipo": tipo
         })
 
     return resultados

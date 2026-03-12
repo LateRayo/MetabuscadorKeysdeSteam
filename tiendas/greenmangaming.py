@@ -1,4 +1,5 @@
 import requests
+from tiendas.tipo import inferir_tipo
 
 def buscar(juego):
     # Endpoint de Algolia para Green Man Gaming
@@ -62,12 +63,15 @@ def buscar(juego):
         # GMG usa URLs relativas, así que le sumamos el dominio base
         link = f"https://www.greenmangaming.com{url_parcial}"
 
+        tipo = inferir_tipo(titulo, extra_texts=[url_parcial])
+
         resultados.append({
             "tienda": "Green Man Gaming",
             "titulo": titulo,
             "precio": float(precio),
             "moneda": moneda,
-            "link": link
+            "link": link,
+            "tipo": tipo
         })
 
     return resultados
